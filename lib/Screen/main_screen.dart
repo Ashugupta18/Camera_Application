@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:id_card/photo_model.dart';
@@ -113,7 +114,7 @@ class _ClickPicState extends State<ClickPic> {
       }
 
       await GallerySaver.saveImage(imagepath,
-          albumName: 'id_card', toDcim: false);
+          albumName: 'ID Card', toDcim: false);
       // photoCount =
       //     photoDataModel.lastSerialNo! - photoDataModel.serialSeriesStart!;
       // photoDataModel.photoCount = photoCount;
@@ -344,7 +345,7 @@ class _ClickPicState extends State<ClickPic> {
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 20),
-                      height: Get.height * .08,
+                      height: Get.height * .088,
                       // color: Colors.amber,
                       child: Row(
                         children: [
@@ -372,18 +373,20 @@ class _ClickPicState extends State<ClickPic> {
                                     fontSize: 17,
                                     color: Color.fromARGB(255, 10, 39, 103)),
                               ),
-                              SizedBox(
-                                width: Get.width * .7,
-                                child: Text(
-                                  imagepath.isNotEmpty
-                                      ? "Path : $imagepath "
-                                      : "Path : ",
-                                  style: const TextStyle(
-                                      letterSpacing: 0.5,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: "lato",
-                                      fontSize: 14,
-                                      color: Color(0xFF15222b)),
+                              Expanded(
+                                child: SizedBox(
+                                  width: Get.width * .7,
+                                  child: Text(
+                                    imagepath.isNotEmpty
+                                        ? "Path : $imagepath "
+                                        : "Path : ",
+                                    style: const TextStyle(
+                                        letterSpacing: 0.5,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "lato",
+                                        fontSize: 14,
+                                        color: Color(0xFF15222b)),
+                                  ),
                                 ),
                               ),
                             ],
@@ -415,6 +418,12 @@ class _ClickPicState extends State<ClickPic> {
                               cursorColor: Colors.red,
                               controller: serialText,
                               keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(8)
+                              ],
+                              // inputFormatters: [
+                              //   LengthLimitingTextInputFormatter(10),
+                              // ],
                               onChanged: (v) {
                                 if (int.tryParse(v) != null && v.isNotEmpty) {
                                   serialNo = int.tryParse(v)!;
@@ -483,37 +492,37 @@ class _ClickPicState extends State<ClickPic> {
                     const SizedBox(
                       height: 20,
                     ),
-                    if (imageFile != null)
-                      Center(
-                        child: Container(
-                          width: 150,
-                          height: 200,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black38),
-                            borderRadius: BorderRadius.circular(3),
-                            image:
-                                DecorationImage(image: FileImage(imageFile!)),
-                            // border: Border.all(width: 2, color: Colors.black12),
-                            // borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
-                      )
-                    else
-                      Center(
-                        child: Container(
-                          width: 1,
-                          height: 1,
-                          alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            // image: DecorationImage(image: FileImage(imageFile!)),
-                            // border: Border.all(width: 2, color: Colors.black12),
-                            // borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
-                      ),
+                    // if (imageFile != null)
+                    //   Center(
+                    //     child: Container(
+                    //       width: 150,
+                    //       height: 200,
+                    //       alignment: Alignment.center,
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.white,
+                    //         border: Border.all(color: Colors.black38),
+                    //         borderRadius: BorderRadius.circular(3),
+                    //         image:
+                    //             DecorationImage(image: FileImage(imageFile!)),
+                    //         // border: Border.all(width: 2, color: Colors.black12),
+                    //         // borderRadius: BorderRadius.circular(12.0),
+                    //       ),
+                    //     ),
+                    //   )
+                    // else
+                    //   Center(
+                    //     child: Container(
+                    //       width: 1,
+                    //       height: 1,
+                    //       alignment: Alignment.center,
+                    //       decoration: const BoxDecoration(
+                    //         color: Colors.white,
+                    //         // image: DecorationImage(image: FileImage(imageFile!)),
+                    //         // border: Border.all(width: 2, color: Colors.black12),
+                    //         // borderRadius: BorderRadius.circular(12.0),
+                    //       ),
+                    //     ),
+                    //   ),
                     const SizedBox(
                       height: 15,
                     ),
@@ -570,32 +579,21 @@ class _ClickPicState extends State<ClickPic> {
       imagepath = imageFile!.path;
       serialNo;
       setState(() {});
-      // Timer(
-      //   const Duration(seconds: 5),
-      //   () => Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => const ClickPic(),
-      //     ),
-      //   ),
-      // );
-
       getImage(camera: ImageSource.camera);
-
-      setState(() {
-        Get.snackbar("Serial no : ${serialText.text.toString()}", "");
-        Fluttertoast.showToast(
-            msg: "Serial no :  ${serialText.text.toString()}",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 18.0);
-      });
+      // Get.snackbar("Serial no : ${serialText.text.toString()}", "",
+      //     snackPosition: SnackPosition.BOTTOM);
+      Fluttertoast.showToast(
+          msg: "Serial no :  ${serialText.text.toString()}",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18.0);
       savePhotoGallery();
-      // await Future.delayed(const Duration(seconds: 3), () {});
-      setState(() {});
+      await Future.delayed(const Duration(seconds: 3), () {
+        const ClickPic();
+      });
     }
   }
 
